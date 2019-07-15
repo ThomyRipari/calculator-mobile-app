@@ -1,7 +1,44 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, Button } from 'react-native';
+import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
 
 export default class App extends Component {
+
+  createNumbersRows = () => {
+    let rows = [];
+    let nums = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0, '.', '=']];
+
+    for (let i = 0; i < 4; i++) {
+      let buttons = [];
+
+      for (let j = 0; j < 3; j++) {
+        buttons.push(
+          <TouchableOpacity style={styles.touchButtons}>
+            <Text style={styles.numberButtonsText}>{nums[i][j]}</Text>
+          </TouchableOpacity>
+        );
+      }
+
+      rows.push(<View style={styles.row}>{buttons}</View>);
+    }
+
+    return rows;
+  }
+
+  createOperationsButtons = () => {
+    let buttons = [];
+    let operations = ["+", "-", "*", "/"]
+
+    for(let i = 0; i < 4; i++) {
+      buttons.push(
+        <TouchableOpacity style={styles.touchButtons}>
+            <Text style={styles.operationsButtonsText}>{operations[i]}</Text>
+        </TouchableOpacity>
+      )
+    }
+
+    return buttons;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -14,32 +51,10 @@ export default class App extends Component {
 
         <View style={styles.buttons}>
           <View style={styles.numbers}>
-            <View style={styles.row}>
-              <Button title="0" />
-              <Button title="0" />
-              <Button title="0" />
-            </View>
-            <View style={styles.row}>
-              <Button title="0" />
-              <Button title="0" />
-              <Button title="0" />
-            </View>
-            <View style={styles.row}>
-              <Button title="0" />
-              <Button title="0" />
-              <Button title="0" />
-            </View>
-            <View style={styles.row}>
-              <Button title="0" />
-              <Button title="0" />
-              <Button title="0" />
-            </View>
+            {this.createNumbersRows()}
           </View>
           <View style={styles.operations}>
-            <Button title="+" />
-            <Button title="+" />
-            <Button title="+" />
-            <Button title="+" />
+            {this.createOperationsButtons()}
           </View>
         </View>
       </View>
@@ -90,12 +105,31 @@ const styles = StyleSheet.create({
 
   numbers: {
     flex: 2,
-    backgroundColor: 'black'
+    backgroundColor: 'yellow'
+  },
+
+  touchButtons: {
+    flex: 1,
+    alignItems: 'center',
+    alignSelf: 'stretch',
+    justifyContent: 'center'
+  },
+
+  numberButtonsText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'black'
+  },
+
+  operationsButtonsText: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    color: 'white'   
   },
 
   operations: {
     flex: 1,
-    backgroundColor: 'yellow',
+    backgroundColor: 'black',
     alignItems: 'stretch',
     justifyContent: 'space-around'    
   }
