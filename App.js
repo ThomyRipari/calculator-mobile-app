@@ -12,13 +12,13 @@ export default class App extends Component {
 
       for (let j = 0; j < 3; j++) {
         buttons.push(
-          <TouchableOpacity style={styles.touchButtons}>
+          <TouchableOpacity key={nums[i][j]} style={styles.touchButtons}>
             <Text style={styles.numberButtonsText}>{nums[i][j]}</Text>
           </TouchableOpacity>
         );
       }
 
-      rows.push(<View style={styles.row}>{buttons}</View>);
+      rows.push(<View key={i} style={styles.row}>{buttons}</View>);
     }
 
     return rows;
@@ -26,11 +26,11 @@ export default class App extends Component {
 
   createOperationsButtons = () => {
     let buttons = [];
-    let operations = ["+", "-", "*", "/"]
+    let operations = ["+", "-", "*", "/"];
 
     for(let i = 0; i < 4; i++) {
       buttons.push(
-        <TouchableOpacity style={styles.touchButtons}>
+        <TouchableOpacity key={i} style={styles.touchButtons}>
             <Text style={styles.operationsButtonsText}>{operations[i]}</Text>
         </TouchableOpacity>
       )
