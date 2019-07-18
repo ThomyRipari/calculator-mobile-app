@@ -3,6 +3,53 @@ import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
 
 export default class App extends Component {
 
+  state = {
+    calculation: ""
+  }
+
+
+  calculateResult = () => {
+    let calculation = this.state.calculation;
+    console.log(calculation);
+  }
+
+
+  onPressNumbers = (value) => {
+    if (value === '=') {
+      return this.calculateResult();
+    }
+
+    this.setState({calculation: this.state.calculation + value});
+  }
+
+  operations = (operation) => {
+    switch(operation) {
+      case "D":
+        let calculationToDelete = this.state.calculation.split('');
+        calculationToDelete.pop();
+
+        this.setState({calculation: calculationToDelete.join('')});
+
+        break;
+
+      case '+':
+      case '-':
+      case '*':
+      case '/':
+        const lastChar = this.state.calculation.split('').pop();
+
+        if (["+", "-", "*", "/"].indexOf(lastChar) >= 0) return;
+
+        if (this.state.calculation === "") return;
+
+        this.setState({calculation: this.state.calculation + operation});
+
+      default:
+        break;
+
+    }
+  }
+
   createNumbersRows = () => {
     let rows = [];
     let nums = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0, '.', '=']];
@@ -12,7 +59,7 @@ export default class App extends Component {
 
       for (let j = 0; j < 3; j++) {
         buttons.push(
-          <TouchableOpacity key={nums[i][j]} style={styles.touchButtons}>
+          <TouchableOpacity key={nums[i][j]} onPress={() => this.onPressNumbers(nums[i][j])} style={styles.touchButtons}>
             <Text style={styles.numberButtonsText}>{nums[i][j]}</Text>
           </TouchableOpacity>
         );
@@ -26,11 +73,11 @@ export default class App extends Component {
 
   createOperationsButtons = () => {
     let buttons = [];
-    let operations = ["+", "-", "*", "/"];
+    let operations = ["D", "+", "-", "*", "/"];
 
-    for(let i = 0; i < 4; i++) {
+    for(let i = 0; i < 5; i++) {
       buttons.push(
-        <TouchableOpacity key={i} style={styles.touchButtons}>
+        <TouchableOpacity key={i} onPress={() => this.operations(operations[i])} style={styles.touchButtons}>
             <Text style={styles.operationsButtonsText}>{operations[i]}</Text>
         </TouchableOpacity>
       )
@@ -46,7 +93,7 @@ export default class App extends Component {
           <Text style={styles.resultText}>121</Text>
         </View>
         <View style={styles.calculation}>
-          <Text style={styles.calculationText}>11*11</Text>
+          <Text style={styles.calculationText}>{this.state.calculation}</Text>
         </View>
 
         <View style={styles.buttons}>
