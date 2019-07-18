@@ -4,19 +4,37 @@ import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
 export default class App extends Component {
 
   state = {
-    calculation: ""
+    calculation: "",
+    result: 0
   }
-
 
   calculateResult = () => {
     let calculation = this.state.calculation;
-    console.log(calculation);
+
+    this.setState({result: eval(calculation)});
+
   }
 
+  validateLastNumber = () => {
+    switch(this.state.calculation.slice(-1)) {
+      case '+':
+      case '-':
+      case '*':
+      case '/':
+        return false;
+
+      default:
+        return true;
+    }
+  }
 
   onPressNumbers = (value) => {
     if (value === '=') {
-      return this.calculateResult();
+
+      if (this.validateLastNumber()) 
+        this.calculateResult()
+     
+      return;
     }
 
     this.setState({calculation: this.state.calculation + value});
@@ -90,7 +108,7 @@ export default class App extends Component {
     return (
       <View style={styles.container}>
         <View style={styles.result}>
-          <Text style={styles.resultText}>121</Text>
+          <Text style={styles.resultText}>{this.state.result}</Text>
         </View>
         <View style={styles.calculation}>
           <Text style={styles.calculationText}>{this.state.calculation}</Text>
