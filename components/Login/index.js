@@ -1,14 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { View, Text, Button, TextInput, Alert } from 'react-native';
 
-class Login extends Component { 
-	state = {username: "", password: ""};
+const Login = (props) => { 
+	
+	const [ state, setState ] = useState({
+		username: '',
+		password: ''
+	})
 
-	checkLogin = () => {
-		const { username, password } = this.state;
+	const checkLogin = () => {
+		const { username, password } = state;
 
 		if (username === "admin" && password === "admin") {
-			this.props.navigation.navigate('calculator');
+			props.navigation.navigate('calculator');
 		} else {
 			Alert.alert('Error', 'Username or Password wrong', [{
 				text: 'OK'
@@ -16,15 +20,13 @@ class Login extends Component {
 		}
 	}
 
-	render() {
-		return (
-			<View>
-				<TextInput placeholder="Username" onChangeText={text => this.setState({username: text})} />
-				<TextInput placeholder="Password" onChangeText={text => this.setState({password: text})} secureTextEntry={true} />
-				<Button title="LOGIN" onPress={this.checkLogin} />
-			</View>
-		)
-	}
+	return (
+		<View>
+			<TextInput placeholder="Username" onChangeText={text => setState(prev => ({...prev, username: text}))} />
+			<TextInput placeholder="Password" onChangeText={text => setState(prev => ({...prev, password: text}))} secureTextEntry={true} />
+			<Button title="LOGIN" onPress={checkLogin} />
+		</View>
+	)
 
 }
 

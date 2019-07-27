@@ -1,28 +1,18 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { StyleSheet, View, Text, Button, TouchableOpacity } from 'react-native';
 
 /* Import Styles */
 import styles from './styles';
 
-export default class Calculator extends Component {
+const Calculator = () => {
 
-  static navigationOptions = {
-    header: null
-  }
-
-  state = {
+  const [ state, setState ] = useState({
     calculation: "",
     result: 0
-  }
+  })
 
-  calculateResult = () => {
-    let calculation = this.state.calculation;
-
-    this.setState({result: eval(calculation)});
-  }
-
-  validateLastNumber = () => {
-    switch(this.state.calculation.slice(-1)) {
+  const validateLastNumber = () => {
+    switch(state.calculation.slice(-1)) {
       case '+':
       case '-':
       case '*':
@@ -34,25 +24,25 @@ export default class Calculator extends Component {
     }
   }
 
-  onPressNumbers = (value) => {
+  const onPressNumbers = (value) => {
     if (value === '=') {
 
-      if (this.validateLastNumber()) 
-        this.calculateResult()
+      if (validateLastNumber()) 
+        setState(prev => ({...prev, result: eval(state.calculation)}))
      
       return;
     }
 
-    this.setState({calculation: this.state.calculation + value});
+    setState(prev => ({...prev, calculation: state.calculation + value}))
   }
 
-  operations = (operation) => {
+  const operations = (operation) => {
     switch(operation) {
       case "D":
-        let calculationToDelete = this.state.calculation.split('');
+        let calculationToDelete = state.calculation.split('');
         calculationToDelete.pop();
 
-        this.setState({calculation: calculationToDelete.join('')});
+        setState(prev => ({...prev, calculation: calculationToDelete.join('')}))
 
         break;
 
@@ -60,13 +50,13 @@ export default class Calculator extends Component {
       case '-':
       case '*':
       case '/':
-        const lastChar = this.state.calculation.split('').pop();
+        const lastChar = state.calculation.split('').pop();
 
         if (["+", "-", "*", "/"].indexOf(lastChar) >= 0) return;
 
-        if (this.state.calculation === "") return;
+        if (state.calculation === "") return;
 
-        this.setState({calculation: this.state.calculation + operation});
+        setState(prev => ({...prev, calculation: state.calculation + operation}))
 
       default:
         break;
@@ -74,7 +64,7 @@ export default class Calculator extends Component {
     }
   }
 
-  createNumbersRows = () => {
+  const createNumbersRows = () => {
     let rows = [];
     let nums = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [0, '.', '=']];
 
@@ -83,7 +73,7 @@ export default class Calculator extends Component {
 
       for (let j = 0; j < 3; j++) {
         buttons.push(
-          <TouchableOpacity key={nums[i][j]} onPress={() => this.onPressNumbers(nums[i][j])} style={styles.touchButtons}>
+          <TouchableOpacity key={nums[i][j]} onPress={() => onPressNumbers(nums[i][j])} style={styles.touchButtons}>
             <Text style={styles.numberButtonsText}>{nums[i][j]}</Text>
           </TouchableOpacity>
         );
@@ -95,14 +85,14 @@ export default class Calculator extends Component {
     return rows;
   }
 
-  createOperationsButtons = () => {
+  const createOperationsButtons = () => {
     let buttons = [];
-    let operations = ["D", "+", "-", "*", "/"];
+    let operators = ["D", "+", "-", "*", "/"];
 
     for(let i = 0; i < 5; i++) {
       buttons.push(
-        <TouchableOpacity key={i} onPress={() => this.operations(operations[i])} style={styles.touchButtons}>
-            <Text style={styles.operationsButtonsText}>{operations[i]}</Text>
+        <TouchableOpacity key={i} onPress={() => operations(operators[i])} style={styles.touchButtons}>
+            <Text style={styles.operationsButtonsText}>{operators[i]}</Text>
         </TouchableOpacity>
       )
     }
@@ -111,25 +101,25 @@ export default class Calculator extends Component {
   }
 
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <View style={styles.result}>
-          <Text style={styles.resultText}>{this.state.result}</Text>
-        </View>
-        <View style={styles.calculation}>
-          <Text style={styles.calculationText}>{this.state.calculation}</Text>
-        </View>
+  return (
+    <View style={styles.container}>
+      <View style={styles.result}>
+        <Text style={styles.resultText}>{state.result}</Text>
+      </View>
+      <View style={styles.calculation}>
+        <Text style={styles.calculationText}>{state.calculation}</Text>
+      </View>
 
-        <View style={styles.buttons}>
-          <View style={styles.numbers}>
-            {this.createNumbersRows()}
-          </View>
-          <View style={styles.operations}>
-            {this.createOperationsButtons()}
-          </View>
+      <View style={styles.buttons}>
+        <View style={styles.numbers}>
+          {createNumbersRows()}
+        </View>
+        <View style={styles.operations}>
+          {createOperationsButtons()}
         </View>
       </View>
-    )
-  }
+    </View>
+  )
 }
+
+export default Calculator;
